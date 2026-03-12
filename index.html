@@ -1,456 +1,314 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demo Portfolio — Deborrah David</title>
-  <meta name="description" content="Streamlit demos and build artefacts: AI automation, data quality validation, and decision support." />
+<style>
+  :root{
+    --black:#05030d;
+    --black2:#09051a;
+    --panel:rgba(255,255,255,.055);
+    --panel2:rgba(255,255,255,.04);
+    --stroke:rgba(255,255,255,.14);
 
-  <style>
-    :root{
-      --black:#05030d;
-      --black2:#09051a;
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.04);
-      --stroke:rgba(255,255,255,.14);
+    --neonPurple:#B100FF;
+    --neonPink:#FF2BD6;
+    --neonAqua:#00F5FF;
+    --neonYellow:#F7FF2B;
 
-      --neonPurple:#B100FF;
-      --neonPink:#FF2BD6;
-      --neonAqua:#00F5FF;
-      --neonYellow:#F7FF2B;
+    --text:#EEE7FF;
+    --muted:rgba(238,231,255,.78);
 
-      --text:#EEE7FF;
-      --muted:rgba(238,231,255,.78);
+    --radius:18px;
+    --shadow: 0 26px 86px rgba(0,0,0,.62);
 
-      --radius:18px;
-      --shadow: 0 26px 86px rgba(0,0,0,.62);
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  }
 
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-    }
+  *{ box-sizing:border-box; }
 
-    *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    font-family: var(--sans);
+    color: var(--text);
+    background:
+      radial-gradient(1200px 700px at 18% 10%, rgba(177,0,255,.26), transparent 60%),
+      radial-gradient(900px 540px at 85% 18%, rgba(255,43,214,.20), transparent 58%),
+      radial-gradient(900px 640px at 55% 88%, rgba(0,245,255,.13), transparent 62%),
+      linear-gradient(180deg, var(--black), var(--black2));
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
 
-    body{
-      margin:0;
-      font-family: var(--sans);
-      color: var(--text);
-      background:
-        radial-gradient(1200px 700px at 18% 10%, rgba(177,0,255,.26), transparent 60%),
-        radial-gradient(900px 540px at 85% 18%, rgba(255,43,214,.20), transparent 58%),
-        radial-gradient(900px 640px at 55% 88%, rgba(0,245,255,.13), transparent 62%),
-        linear-gradient(180deg, var(--black), var(--black2));
-      min-height:100vh;
-      overflow-x:hidden;
-      position:relative;
-    }
+  .wrap{
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 44px 18px 64px;
+    position:relative;
+    z-index:1;
+  }
 
-    /* ===== Tasteful “disco light” (soft spotlights) =====
-       No streaks. Very subtle. Slow movement. */
-    body::before{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      pointer-events:none;
-      z-index:0;
+  /* ===== Neon runner outline (clean ring) ===== */
+  .neonWrap{
+    position: relative;
+    border-radius: calc(var(--radius) + 10px);
+    padding: 1px;
+    overflow:hidden;
+    background: rgba(0,0,0,0);
+  }
 
-      background:
-        radial-gradient(520px 380px at 20% 25%, rgba(247,255,43,.07), transparent 60%),
-        radial-gradient(560px 420px at 80% 30%, rgba(0,245,255,.06), transparent 62%),
-        radial-gradient(520px 380px at 60% 85%, rgba(255,43,214,.06), transparent 60%),
-        radial-gradient(520px 380px at 35% 75%, rgba(177,0,255,.06), transparent 60%);
+  .neonWrap::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(
+      from 0deg,
+      rgba(247,255,43,.05),
+      rgba(247,255,43,.95),
+      rgba(247,255,43,.05),
+      rgba(247,255,43,.05)
+    );
+    animation: ringSpin 7.5s linear infinite;
 
-      filter: blur(2px);
-      opacity:.85;
-      animation: drift 18s ease-in-out infinite alternate;
-      transform: translate3d(0,0,0);
-    }
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 
-    @keyframes drift{
-      0%   { transform: translate3d(-2%, -1%, 0) scale(1.02); }
-      50%  { transform: translate3d( 2%,  1%, 0) scale(1.03); }
-      100% { transform: translate3d(-1%,  2%, 0) scale(1.02); }
-    }
+  .neonWrap::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius: inherit;
+    box-shadow:
+      0 0 0 1px rgba(247,255,43,.06),
+      0 0 22px rgba(247,255,43,.10),
+      0 0 28px rgba(177,0,255,.06);
+    pointer-events:none;
+  }
 
-    @media (prefers-reduced-motion: reduce){
-      body::before{ animation:none; }
-    }
+  @keyframes ringSpin{ to { transform: rotate(360deg); } }
 
-    .wrap{
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 44px 18px 64px;
-      position:relative;
-      z-index:1; /* above disco lights */
-    }
+  @media (prefers-reduced-motion: reduce){
+    .neonWrap::before{ animation:none; }
+  }
 
-    /* ===== Neon runner outline (clean ring, no bleed / no streaks) ===== */
-    .neonWrap{
-      position: relative;
-      border-radius: calc(var(--radius) + 10px);
-      padding: 1px;
-      overflow:hidden;
-      background: rgba(0,0,0,0);
-    }
+  .neonInner{
+    position:relative;
+    z-index:1;
+    border-radius: calc(var(--radius) + 9px);
+    border: 1px solid rgba(255,255,255,.10);
+    background: var(--panel);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+    overflow:hidden;
+  }
 
-    .neonWrap::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: inherit;
-      padding: 2px; /* ring thickness */
-
-      /* Conic runner: yellow primary, with faint coloured undertones (tasteful) */
-      background: conic-gradient(
-        from 0deg,
-        rgba(247,255,43,.05),
-        rgba(247,255,43,.95),
-        rgba(247,255,43,.05),
-        rgba(247,255,43,.05)
+  /* HERO */
+  .hero{
+    position:relative;
+    padding: 26px 22px;
+    background:
+      linear-gradient(135deg,
+        rgba(177,0,255,.10),
+        rgba(255,43,214,.06),
+        rgba(0,245,255,.05)
       );
+  }
 
-      animation: ringSpin 7.5s linear infinite;
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background:
+      radial-gradient(680px 280px at 20% 20%, rgba(177,0,255,.18), transparent 60%),
+      radial-gradient(680px 280px at 80% 35%, rgba(255,43,214,.12), transparent 60%),
+      radial-gradient(720px 320px at 55% 90%, rgba(0,245,255,.10), transparent 65%);
+    filter: blur(22px);
+    opacity:.30;
+    z-index:0;
+  }
+  .hero > *{ position:relative; z-index:1; }
 
-      /* Mask keeps ONLY the ring visible */
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-    }
+  h1{
+    margin:0 0 6px;
+    font-size: clamp(30px, 3.2vw, 44px);
+    letter-spacing: -.02em;
+    line-height: 1.12;
+  }
 
-    /* A subtle local glow that stays “premium”, not loud */
-    .neonWrap::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: inherit;
-      box-shadow:
-        0 0 0 1px rgba(247,255,43,.06),
-        0 0 22px rgba(247,255,43,.10),
-        0 0 28px rgba(177,0,255,.06);
-      pointer-events:none;
-    }
+  .accentText{
+    background: linear-gradient(90deg,
+      rgba(247,255,43,.70),
+      rgba(247,255,43,1),
+      rgba(247,255,43,.70)
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    font-weight: 950;
+    text-shadow:
+      0 0 10px rgba(247,255,43,.18),
+      0 0 18px rgba(247,255,43,.10);
+  }
 
-    @keyframes ringSpin{ to { transform: rotate(360deg); } }
+  .sub{
+    margin:0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 84ch;
+  }
 
-    @media (prefers-reduced-motion: reduce){
-      .neonWrap::before{ animation:none; }
-    }
+  .underline{
+    height:2px;
+    width: 210px;
+    margin-top:12px;
+    background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
+    border-radius: 999px;
+    opacity:.90;
+    box-shadow: 0 0 14px rgba(247,255,43,.10);
+  }
 
-    .neonInner{
-      position:relative;
-      z-index:1;
-      border-radius: calc(var(--radius) + 9px);
-      border: 1px solid rgba(255,255,255,.10);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-      overflow:hidden;
-    }
+  .tag{
+    margin-top:12px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
 
-    /* HERO */
-    .hero{
-      position:relative;
-      padding: 26px 22px;
-      background:
-        linear-gradient(135deg,
-          rgba(177,0,255,.10),
-          rgba(255,43,214,.06),
-          rgba(0,245,255,.05)
-        );
-    }
+  .pill{
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.14);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    color: rgba(238,231,255,.86);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+  }
 
-    /* Soft internal glow only (no streaks) */
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(680px 280px at 20% 20%, rgba(177,0,255,.18), transparent 60%),
-        radial-gradient(680px 280px at 80% 35%, rgba(255,43,214,.12), transparent 60%),
-        radial-gradient(720px 320px at 55% 90%, rgba(0,245,255,.10), transparent 65%);
-      filter: blur(22px);
-      opacity:.30;
-      z-index:0;
-    }
-    .hero > *{ position:relative; z-index:1; }
+  /* GRID */
+  .grid{
+    display:grid;
+    grid-template-columns: 1.35fr .65fr;
+    gap: 16px;
+    margin-top: 18px;
+  }
+  @media (max-width: 900px){
+    .grid{ grid-template-columns: 1fr; }
+  }
 
-    h1{
-      margin:0 0 6px;
-      font-size: clamp(30px, 3.2vw, 44px);
-      letter-spacing: -.02em;
-      line-height: 1.12;
-    }
+  .card{
+    padding: 18px;
+    border-radius: calc(var(--radius) + 9px);
+    background: var(--panel2);
+  }
 
-    /* FIX: Demo Portfolio = neon yellow gradient (no blue) */
-    .accentText{
-      background: linear-gradient(90deg,
-        rgba(247,255,43,.70),
-        rgba(247,255,43,1),
-        rgba(247,255,43,.70)
-      );
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      font-weight: 950;
-      text-shadow:
-        0 0 10px rgba(247,255,43,.18),
-        0 0 18px rgba(247,255,43,.10);
-    }
+  .sectionTitle{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 12px;
+    font-size: 13px;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    color: rgba(247,255,43,.92);
+    text-shadow: 0 0 12px rgba(247,255,43,.12);
+  }
 
-    .sub{
-      margin:0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.5;
-      max-width: 84ch;
-    }
+  .spark{
+    width:10px; height:10px;
+    border-radius:999px;
+    background: linear-gradient(135deg, var(--neonPurple), var(--neonPink), var(--neonAqua), var(--neonYellow));
+    box-shadow: 0 0 14px rgba(0,245,255,.12);
+  }
 
-    /* Divider line without blue; keep tasteful */
-    .underline{
-      height:2px;
-      width: 210px;
-      margin-top:12px;
-      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
-      border-radius: 999px;
-      opacity:.90;
-      box-shadow: 0 0 14px rgba(247,255,43,.10);
-    }
+  .demo{
+    display:flex;
+    gap:14px;
+    padding:14px;
+    border-radius:16px;
+    background: rgba(0,0,0,.16);
+    border: 1px solid rgba(255,255,255,.10);
+    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    text-decoration:none;
+    color: inherit;
+    margin-bottom: 12px;
+  }
+  .demo:hover{
+    transform: translateY(-2px);
+    background: rgba(0,0,0,.22);
+    border-color: rgba(255,255,255,.16);
+  }
 
-    .tag{
-      margin-top:12px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
+  .badge{
+    flex:0 0 auto;
+    width: 46px; height:46px;
+    border-radius: 16px;
+    display:grid;
+    place-items:center;
+    border: 1px solid rgba(255,255,255,.14);
+    background: linear-gradient(135deg, rgba(177,0,255,.20), rgba(255,43,214,.14), rgba(0,245,255,.12));
+    font-weight: 900;
+    font-family: var(--mono);
+    letter-spacing: .04em;
+    color: rgba(247,255,43,.92);
+    text-shadow: 0 0 10px rgba(247,255,43,.12);
+  }
 
-    /* Pills: NOT neon yellow (as requested earlier) */
-    .pill{
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.14);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12.5px;
-      color: rgba(238,231,255,.86);
-      backdrop-filter: blur(10px);
-      white-space: nowrap;
-    }
+  .demo h3{
+    margin:0;
+    font-size: 15.5px;
+    line-height:1.2;
+    color: rgba(238,231,255,.92);
+  }
+  .demo p{
+    margin:6px 0 0;
+    color: rgba(238,231,255,.74);
+    font-size: 13.5px;
+    line-height: 1.35;
+  }
 
-    /* GRID */
-    .grid{
-      display:grid;
-      grid-template-columns: 1.35fr .65fr;
-      gap: 16px;
-      margin-top: 18px;
-    }
-    @media (max-width: 900px){
-      .grid{ grid-template-columns: 1fr; }
-    }
+  .links a{
+    display:block;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.14);
+    text-decoration:none;
+    color: rgba(238,231,255,.90);
+    margin-bottom: 10px;
+    transition: background .12s ease, border-color .12s ease, transform .12s ease;
+  }
+  .links a:hover{
+    transform: translateY(-1px);
+    background: rgba(0,0,0,.20);
+    border-color: rgba(255,255,255,.18);
+  }
 
-    .card{
-      padding: 18px;
-      border-radius: calc(var(--radius) + 9px);
-      background: var(--panel2);
-    }
+  .about{
+    margin:12px 0 0;
+    color: rgba(238,231,255,.78);
+    font-size: 13.2px;
+    line-height: 1.55;
+  }
+  .about strong{
+    color: rgba(238,231,255,.92);
+    font-weight: 800;
+  }
+  .about ul{
+    margin:10px 0 0;
+    padding-left: 18px;
+    color: rgba(238,231,255,.72);
+  }
+  .about li{ margin:6px 0; }
 
-    /* Neon yellow ONLY for section titles */
-    .sectionTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin:0 0 12px;
-      font-size: 13px;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      color: rgba(247,255,43,.92);
-      text-shadow: 0 0 12px rgba(247,255,43,.12);
-    }
-
-    .spark{
-      width:10px; height:10px;
-      border-radius:999px;
-      background: linear-gradient(135deg, var(--neonPurple), var(--neonPink), var(--neonAqua), var(--neonYellow));
-      box-shadow: 0 0 14px rgba(0,245,255,.12);
-    }
-
-    /* DEMO CARDS */
-    .demo{
-      display:flex;
-      gap:14px;
-      padding:14px;
-      border-radius:16px;
-      background: rgba(0,0,0,.16);
-      border: 1px solid rgba(255,255,255,.10);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      text-decoration:none;
-      color: inherit;
-      margin-bottom: 12px;
-    }
-    .demo:hover{
-      transform: translateY(-2px);
-      background: rgba(0,0,0,.22);
-      border-color: rgba(255,255,255,.16);
-    }
-
-    /* NYC/OPS neon yellow kept */
-    .badge{
-      flex:0 0 auto;
-      width: 46px; height:46px;
-      border-radius: 16px;
-      display:grid;
-      place-items:center;
-      border: 1px solid rgba(255,255,255,.14);
-      background: linear-gradient(135deg, rgba(177,0,255,.20), rgba(255,43,214,.14), rgba(0,245,255,.12));
-      font-weight: 900;
-      font-family: var(--mono);
-      letter-spacing: .04em;
-      color: rgba(247,255,43,.92);
-      text-shadow: 0 0 10px rgba(247,255,43,.12);
-    }
-
-    .demo h3{
-      margin:0;
-      font-size: 15.5px;
-      line-height:1.2;
-      color: rgba(238,231,255,.92);
-    }
-    .demo p{
-      margin:6px 0 0;
-      color: rgba(238,231,255,.74);
-      font-size: 13.5px;
-      line-height: 1.35;
-    }
-
-    /* Links (normal) */
-    .links a{
-      display:block;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
-      text-decoration:none;
-      color: rgba(238,231,255,.90);
-      margin-bottom: 10px;
-      transition: background .12s ease, border-color .12s ease, transform .12s ease;
-    }
-    .links a:hover{
-      transform: translateY(-1px);
-      background: rgba(0,0,0,.20);
-      border-color: rgba(255,255,255,.18);
-    }
-
-    .about{
-      margin:12px 0 0;
-      color: rgba(238,231,255,.78);
-      font-size: 13.2px;
-      line-height: 1.55;
-    }
-    .about strong{
-      color: rgba(238,231,255,.92);
-      font-weight: 800;
-    }
-    .about ul{
-      margin:10px 0 0;
-      padding-left: 18px;
-      color: rgba(238,231,255,.72);
-    }
-    .about li{ margin:6px 0; }
-
-    .footer{
-      margin-top: 18px;
-      color: rgba(238,231,255,.58);
-      font-size: 12.5px;
-      text-align:center;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="wrap">
-
-    <!-- HERO -->
-    <div class="neonWrap">
-      <div class="neonInner">
-        <div class="hero">
-          <h1><span class="accentText">Demo Portfolio</span></h1>
-          <p class="sub">
-            Streamlit demonstrations and build artefacts focused on AI automation, data-quality validation,
-            and decision support.
-          </p>
-          <div class="underline"></div>
-
-          <div class="tag">
-            <div class="pill">AI automation & agent workflows</div>
-            <div class="pill">Python • VS Code • Git</div>
-            <div class="pill">Streamlit demos</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid">
-      <!-- STREAMLIT APPS -->
-      <div class="neonWrap">
-        <div class="neonInner">
-          <div class="card">
-            <div class="sectionTitle"><span class="spark"></span> Streamlit Applications</div>
-
-            <a class="demo" href="https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/#2-audit-result" target="_blank" rel="noreferrer">
-              <div class="badge">NYC</div>
-              <div>
-                <h3>NYC Price Check</h3>
-                <p>Decision-support demo for benchmarking and auditing price/quote signals.</p>
-              </div>
-            </a>
-
-            <a class="demo" href="https://mineops-copilot-4mrzkfd5jdbszf86cdt4vu.streamlit.app/" target="_blank" rel="noreferrer">
-              <div class="badge">OPS</div>
-              <div>
-                <h3>VANTAGE — Operations Intelligence Engine</h3>
-                <p>Multi-agent workflow producing operational directives from telemetry-derived risk signals.</p>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- LINKS / ABOUT -->
-      <div class="neonWrap">
-        <div class="neonInner">
-          <div class="card">
-            <div class="sectionTitle"><span class="spark"></span> Links</div>
-            <div class="links">
-              <a href="https://github.com/debdavid" target="_blank" rel="noreferrer">GitHub</a>
-              <a href="https://www.linkedin.com/in/deborrahdavid" target="_blank" rel="noreferrer">LinkedIn</a>
-              <a href="mailto:deborrahdavid777@gmail.com">Email</a>
-            </div>
-
-            <div class="sectionTitle" style="margin-top:16px;"><span class="spark"></span> About</div>
-            <div class="about">
-              <p style="margin:0;">
-                I build practical AI systems that reduce operational friction and improve decision quality.
-                My work spans data science, cloud analytics, and applied automation—focused on turning ambiguous
-                workflows into reliable, testable solutions.
-              </p>
-              <ul>
-                <li><strong>Method:</strong> define the decision + success metric, instrument data quality, then iterate with structured outputs and human review where needed.</li>
-                <li><strong>Outcomes:</strong> exception-first triage, evidence trails, and lightweight interfaces that support real users—not just notebooks.</li>
-                <li><strong>Operating style:</strong> cost-conscious prototyping, clear documentation, and rapid iteration from feedback.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      © <span id="year"></span> Deborrah David • Demo Portfolio
-    </div>
-  </div>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-</body>
-</html>
+  .footer{
+    margin-top: 18px;
+    color: rgba(238,231,255,.58);
+    font-size: 12.5px;
+    text-align:center;
+  }
+</style>
