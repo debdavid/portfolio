@@ -8,15 +8,16 @@
 
   <style>
     :root{
-      /* Accenture-inspired base + neon accents (pink/blue) */
-      --bg0:#070515;
-      --bg1:#12062a;
-      --bg2:#1a0a3a;
+      /* Dark base + neon accents (purple/pink/blue + yellow) */
+      --bg0:#05040f;     /* near-black */
+      --bg1:#0b0720;
+      --bg2:#14083a;
 
-      --accentPurple:#A100FF;   /* Accenture-like purple */
-      --accentPink:#FF2BD6;
-      --accentBlue:#3AA0FF;
-      --accentCyan:#2EE7D6;
+      --neonPurple:#A100FF;
+      --neonPink:#FF2BD6;
+      --neonBlue:#3AA0FF;
+      --neonYellow:#F7FF2B;  /* neon yellow */
+      --neonCyan:#2EE7D6;
 
       --text:#F7F3FF;
       --muted:rgba(247,243,255,.78);
@@ -26,7 +27,7 @@
       --cardHover:rgba(255,255,255,.10);
 
       --radius:18px;
-      --shadow: 0 22px 70px rgba(0,0,0,.50);
+      --shadow: 0 22px 70px rgba(0,0,0,.55);
 
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -38,9 +39,10 @@
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(1200px 650px at 15% 10%, rgba(161,0,255,.34), transparent 55%),
-        radial-gradient(900px 520px at 82% 18%, rgba(255,43,214,.25), transparent 55%),
-        radial-gradient(900px 600px at 50% 88%, rgba(58,160,255,.20), transparent 55%),
+        radial-gradient(1200px 650px at 15% 10%, rgba(161,0,255,.33), transparent 55%),
+        radial-gradient(900px 520px at 82% 18%, rgba(255,43,214,.24), transparent 55%),
+        radial-gradient(900px 600px at 55% 86%, rgba(58,160,255,.18), transparent 55%),
+        radial-gradient(800px 520px at 92% 75%, rgba(247,255,43,.14), transparent 60%),
         linear-gradient(180deg, var(--bg0), var(--bg2));
       min-height:100vh;
       overflow-x:hidden;
@@ -70,21 +72,14 @@
       background: linear-gradient(90deg,
         rgba(161,0,255,.45),
         rgba(255,43,214,.40),
-        rgba(58,160,255,.40)
+        rgba(58,160,255,.40),
+        rgba(247,255,43,.28)
       );
       filter: blur(28px);
-      opacity:.35;
+      opacity:.30;
       z-index:0;
     }
     .hero > *{ position:relative; z-index:1; }
-
-    .topline{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:16px;
-      flex-wrap:wrap;
-    }
 
     h1{
       margin: 0 0 6px;
@@ -98,11 +93,11 @@
       color: var(--muted);
       font-size: 15px;
       line-height: 1.5;
-      max-width: 72ch;
+      max-width: 78ch;
     }
 
     .tag{
-      margin-top:10px;
+      margin-top:12px;
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -118,39 +113,12 @@
       white-space: nowrap;
     }
 
-    /* CTA buttons */
-    .ctaRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-    .btn{
-      display:inline-flex;
-      gap:10px;
-      align-items:center;
-      padding: 10px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.07);
-      color: rgba(247,243,255,.92);
-      text-decoration:none;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    .btn:hover{
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.11);
-      border-color: rgba(255,255,255,.22);
-    }
-    .btnPrimary{
-      border-color: rgba(255,255,255,.22);
-      background: linear-gradient(135deg, rgba(161,0,255,.30), rgba(255,43,214,.18), rgba(58,160,255,.18));
-    }
-    .btn .dot{
-      width:10px;height:10px;border-radius:999px;
-      background: linear-gradient(135deg, var(--accentPink), var(--accentPurple), var(--accentBlue));
-      box-shadow: 0 0 18px rgba(255,43,214,.35);
-      flex:0 0 auto;
+    .accentText{
+      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 900;
     }
 
     /* GRID */
@@ -186,7 +154,7 @@
     .spark{
       width: 10px; height: 10px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--accentPurple), var(--accentPink), var(--accentBlue));
+      background: linear-gradient(135deg, var(--neonPurple), var(--neonPink), var(--neonBlue), var(--neonYellow));
       box-shadow: 0 0 18px rgba(161,0,255,.35);
     }
 
@@ -234,16 +202,9 @@
       font-size: 13.5px;
       line-height: 1.35;
     }
-    .url{
-      margin-top: 8px;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: rgba(247,243,255,.80);
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 100%;
-    }
+
+    /* Hide raw URLs in the UI (links still work via <a href="...">) */
+    .url{ display:none; }
 
     /* Right rail links */
     .links a{
@@ -276,12 +237,14 @@
       text-align:center;
     }
 
-    .accentText{
-      background: linear-gradient(90deg, var(--accentPink), var(--accentPurple), var(--accentBlue));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 900;
+    /* Subtle neon underline under headings */
+    .underline{
+      height: 2px;
+      width: 140px;
+      margin-top: 10px;
+      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
+      border-radius: 999px;
+      opacity: .9;
     }
   </style>
 </head>
@@ -289,32 +252,17 @@
 <body>
   <div class="wrap">
     <div class="hero">
-      <div class="topline">
-        <div>
-          <h1><span class="accentText">Demo Portfolio</span> — Deborrah David</h1>
-          <p class="sub">
-            A curated set of Streamlit demonstrations and build artefacts focused on AI automation,
-            data-quality validation, and decision support.
-          </p>
+      <h1><span class="accentText">Demo Portfolio</span> — Deborrah David</h1>
+      <p class="sub">
+        Streamlit demonstrations and build artefacts focused on AI automation, data-quality validation,
+        and decision support.
+      </p>
+      <div class="underline"></div>
 
-          <div class="tag">
-            <div class="pill">AI automation & agent workflows</div>
-            <div class="pill">Python • VS Code • Git</div>
-            <div class="pill">Streamlit demos</div>
-          </div>
-
-          <div class="ctaRow">
-            <a class="btn btnPrimary" href="https://github.com/debdavid" target="_blank" rel="noreferrer">
-              <span class="dot"></span> GitHub
-            </a>
-            <a class="btn" href="https://www.linkedin.com/in/deborrahdavid" target="_blank" rel="noreferrer">
-              <span class="dot"></span> LinkedIn
-            </a>
-            <a class="btn" href="mailto:deborrahdavid777@gmail.com">
-              <span class="dot"></span> Email
-            </a>
-          </div>
-        </div>
+      <div class="tag">
+        <div class="pill">AI automation & agent workflows</div>
+        <div class="pill">Python • VS Code • Git</div>
+        <div class="pill">Streamlit demos</div>
       </div>
     </div>
 
@@ -326,18 +274,16 @@
         <a class="demo" href="https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/#2-audit-result" target="_blank" rel="noreferrer">
           <div class="badge">NYC</div>
           <div>
-            <h3>NYC Price Check (Streamlit)</h3>
+            <h3>NYC Price Check</h3>
             <p>Decision-support demo for benchmarking and auditing price/quote signals.</p>
-            <div class="url">https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/</div>
           </div>
         </a>
 
         <a class="demo" href="https://mineops-copilot-4mrzkfd5jdbszf86cdt4vu.streamlit.app/" target="_blank" rel="noreferrer">
           <div class="badge">OPS</div>
           <div>
-            <h3>VANTAGE — Operations Intelligence Engine (Streamlit)</h3>
-            <p>Multi-agent workflow demo producing operational directives from telemetry-derived risk signals.</p>
-            <div class="url">https://mineops-copilot-4mrzkfd5jdbszf86cdt4vu.streamlit.app/</div>
+            <h3>VANTAGE — Operations Intelligence Engine</h3>
+            <p>Multi-agent workflow producing operational directives from telemetry-derived risk signals.</p>
           </div>
         </a>
       </div>
@@ -353,7 +299,7 @@
 
         <div class="sectionTitle" style="margin-top:16px;"><span class="spark"></span> About</div>
         <p class="note">
-          These demos are hosted on Streamlit. Source code and implementation notes are available via GitHub.
+          Demos are hosted on Streamlit. Source code and implementation notes are available via GitHub.
         </p>
       </div>
     </div>
