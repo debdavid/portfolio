@@ -10,6 +10,9 @@
     :root{
       --black:#05030d;
       --black2:#09051a;
+      --panel:rgba(255,255,255,.055);
+      --panel2:rgba(255,255,255,.04);
+      --stroke:rgba(255,255,255,.14);
 
       --neonPurple:#B100FF;
       --neonPink:#FF2BD6;
@@ -19,66 +22,96 @@
       --text:#EEE7FF;
       --muted:rgba(238,231,255,.78);
 
-      --stroke:rgba(255,255,255,.14);
       --radius:18px;
-      --shadow: 0 24px 78px rgba(0,0,0,.60);
+      --shadow: 0 26px 86px rgba(0,0,0,.62);
 
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
 
     *{ box-sizing:border-box; }
+
     body{
       margin:0;
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(1100px 620px at 16% 10%, rgba(177,0,255,.34), transparent 55%),
-        radial-gradient(900px 520px at 84% 16%, rgba(255,43,214,.26), transparent 55%),
-        radial-gradient(900px 560px at 55% 86%, rgba(0,245,255,.18), transparent 55%),
-        radial-gradient(760px 520px at 92% 76%, rgba(247,255,43,.14), transparent 60%),
+        radial-gradient(1200px 700px at 18% 10%, rgba(177,0,255,.26), transparent 60%),
+        radial-gradient(900px 540px at 85% 18%, rgba(255,43,214,.20), transparent 58%),
+        radial-gradient(900px 640px at 55% 88%, rgba(0,245,255,.13), transparent 62%),
         linear-gradient(180deg, var(--black), var(--black2));
       min-height:100vh;
       overflow-x:hidden;
+      position:relative;
+    }
+
+    /* ===== Tasteful “disco light” (soft spotlights) =====
+       No streaks. Very subtle. Slow movement. */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      z-index:0;
+
+      background:
+        radial-gradient(520px 380px at 20% 25%, rgba(247,255,43,.07), transparent 60%),
+        radial-gradient(560px 420px at 80% 30%, rgba(0,245,255,.06), transparent 62%),
+        radial-gradient(520px 380px at 60% 85%, rgba(255,43,214,.06), transparent 60%),
+        radial-gradient(520px 380px at 35% 75%, rgba(177,0,255,.06), transparent 60%);
+
+      filter: blur(2px);
+      opacity:.85;
+      animation: drift 18s ease-in-out infinite alternate;
+      transform: translate3d(0,0,0);
+    }
+
+    @keyframes drift{
+      0%   { transform: translate3d(-2%, -1%, 0) scale(1.02); }
+      50%  { transform: translate3d( 2%,  1%, 0) scale(1.03); }
+      100% { transform: translate3d(-1%,  2%, 0) scale(1.02); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      body::before{ animation:none; }
     }
 
     .wrap{
       max-width: 1040px;
       margin: 0 auto;
       padding: 44px 18px 64px;
+      position:relative;
+      z-index:1; /* above disco lights */
     }
 
-    /* ===== Neon running outline (no stray streaks) =====
-       Key changes vs before:
-       - NO drop-shadow filter on wrapper (prevents screen-level streaks)
-       - inset:0 (no oversized gradient)
-       - mask shows only ring
-       - overflow hidden to contain everything
-    */
+    /* ===== Neon runner outline (clean ring, no bleed / no streaks) ===== */
     .neonWrap{
       position: relative;
       border-radius: calc(var(--radius) + 10px);
-      padding: 1px;               /* ring thickness container */
-      overflow: hidden;
-      background: rgba(0,0,0,.0); /* keep clean */
+      padding: 1px;
+      overflow:hidden;
+      background: rgba(0,0,0,0);
     }
 
     .neonWrap::before{
       content:"";
       position:absolute;
-      inset:0;                    /* critical: no negative inset */
+      inset:0;
       border-radius: inherit;
-      padding: 2px;               /* ring thickness */
+      padding: 2px; /* ring thickness */
+
+      /* Conic runner: yellow primary, with faint coloured undertones (tasteful) */
       background: conic-gradient(
         from 0deg,
         rgba(247,255,43,.05),
-        rgba(247,255,43,1),
+        rgba(247,255,43,.95),
         rgba(247,255,43,.05),
         rgba(247,255,43,.05)
       );
-      animation: spin 6s linear infinite;
 
-      /* mask to only show border ring */
+      animation: ringSpin 7.5s linear infinite;
+
+      /* Mask keeps ONLY the ring visible */
       -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
@@ -86,99 +119,103 @@
       mask-composite: exclude;
     }
 
-    /* subtle glow that stays local to the ring (no streaks) */
+    /* A subtle local glow that stays “premium”, not loud */
     .neonWrap::after{
       content:"";
       position:absolute;
       inset:0;
       border-radius: inherit;
       box-shadow:
-        0 0 0 1px rgba(247,255,43,.08),
-        0 0 18px rgba(247,255,43,.10);
+        0 0 0 1px rgba(247,255,43,.06),
+        0 0 22px rgba(247,255,43,.10),
+        0 0 28px rgba(177,0,255,.06);
       pointer-events:none;
     }
 
-    @keyframes spin{ to { transform: rotate(360deg); } }
+    @keyframes ringSpin{ to { transform: rotate(360deg); } }
 
     @media (prefers-reduced-motion: reduce){
-      .neonWrap::before{ animation: none; }
+      .neonWrap::before{ animation:none; }
     }
 
     .neonInner{
-      position: relative;
-      z-index: 1;
+      position:relative;
+      z-index:1;
       border-radius: calc(var(--radius) + 9px);
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
+      background: var(--panel);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      overflow: hidden;
+      backdrop-filter: blur(12px);
+      overflow:hidden;
     }
 
     /* HERO */
     .hero{
-      position: relative;
+      position:relative;
       padding: 26px 22px;
-      background: linear-gradient(135deg,
-        rgba(177,0,255,.12),
-        rgba(255,43,214,.08),
-        rgba(0,245,255,.06)
-      );
+      background:
+        linear-gradient(135deg,
+          rgba(177,0,255,.10),
+          rgba(255,43,214,.06),
+          rgba(0,245,255,.05)
+        );
     }
-    .hero:before{
+
+    /* Soft internal glow only (no streaks) */
+    .hero::before{
       content:"";
       position:absolute;
       inset:-2px;
-      background: linear-gradient(90deg,
-        rgba(177,0,255,.34),
-        rgba(255,43,214,.26),
-        rgba(0,245,255,.20),
-        rgba(247,255,43,.16)
-      );
-      filter: blur(30px);
-      opacity:.20;
+      background:
+        radial-gradient(680px 280px at 20% 20%, rgba(177,0,255,.18), transparent 60%),
+        radial-gradient(680px 280px at 80% 35%, rgba(255,43,214,.12), transparent 60%),
+        radial-gradient(720px 320px at 55% 90%, rgba(0,245,255,.10), transparent 65%);
+      filter: blur(22px);
+      opacity:.30;
       z-index:0;
     }
     .hero > *{ position:relative; z-index:1; }
 
     h1{
-      margin: 0 0 6px;
-      font-size: clamp(28px, 3.2vw, 42px);
+      margin:0 0 6px;
+      font-size: clamp(30px, 3.2vw, 44px);
       letter-spacing: -.02em;
       line-height: 1.12;
     }
 
-    /* Demo Portfolio: neon yellow gradient (no blue) */
+    /* FIX: Demo Portfolio = neon yellow gradient (no blue) */
     .accentText{
       background: linear-gradient(90deg,
-        rgba(247,255,43,.78),
+        rgba(247,255,43,.70),
         rgba(247,255,43,1),
-        rgba(247,255,43,.78)
+        rgba(247,255,43,.70)
       );
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
       font-weight: 950;
-      text-shadow: 0 0 14px rgba(247,255,43,.12);
+      text-shadow:
+        0 0 10px rgba(247,255,43,.18),
+        0 0 18px rgba(247,255,43,.10);
     }
 
     .sub{
-      margin: 0;
+      margin:0;
       color: var(--muted);
       font-size: 15px;
       line-height: 1.5;
       max-width: 84ch;
     }
 
-    /* Remove blue from divider (pink→purple→aqua→yellow) */
+    /* Divider line without blue; keep tasteful */
     .underline{
-      height: 2px;
-      width: 200px;
-      margin-top: 12px;
+      height:2px;
+      width: 210px;
+      margin-top:12px;
       background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
       border-radius: 999px;
-      opacity: .95;
-      box-shadow: 0 0 14px rgba(247,255,43,.12);
+      opacity:.90;
+      box-shadow: 0 0 14px rgba(247,255,43,.10);
     }
 
     .tag{
@@ -188,10 +225,10 @@
       gap:10px;
     }
 
-    /* Pills: NOT neon yellow anymore */
+    /* Pills: NOT neon yellow (as requested earlier) */
     .pill{
       border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.16);
+      background: rgba(0,0,0,.14);
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 12.5px;
@@ -214,7 +251,7 @@
     .card{
       padding: 18px;
       border-radius: calc(var(--radius) + 9px);
-      background: rgba(255,255,255,.04);
+      background: var(--panel2);
     }
 
     /* Neon yellow ONLY for section titles */
@@ -222,28 +259,28 @@
       display:flex;
       align-items:center;
       gap:10px;
-      margin: 0 0 12px;
+      margin:0 0 12px;
       font-size: 13px;
       letter-spacing: .10em;
       text-transform: uppercase;
       color: rgba(247,255,43,.92);
-      text-shadow: 0 0 12px rgba(247,255,43,.14);
+      text-shadow: 0 0 12px rgba(247,255,43,.12);
     }
 
     .spark{
-      width: 10px; height: 10px;
-      border-radius: 999px;
+      width:10px; height:10px;
+      border-radius:999px;
       background: linear-gradient(135deg, var(--neonPurple), var(--neonPink), var(--neonAqua), var(--neonYellow));
-      box-shadow: 0 0 18px rgba(0,245,255,.14);
+      box-shadow: 0 0 14px rgba(0,245,255,.12);
     }
 
     /* DEMO CARDS */
     .demo{
       display:flex;
-      gap: 14px;
-      padding: 14px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.18);
+      gap:14px;
+      padding:14px;
+      border-radius:16px;
+      background: rgba(0,0,0,.16);
       border: 1px solid rgba(255,255,255,.10);
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
       text-decoration:none;
@@ -252,15 +289,14 @@
     }
     .demo:hover{
       transform: translateY(-2px);
-      background: rgba(0,0,0,.26);
+      background: rgba(0,0,0,.22);
       border-color: rgba(255,255,255,.16);
     }
 
-    /* Keep NYC/OPS neon yellow */
+    /* NYC/OPS neon yellow kept */
     .badge{
-      flex: 0 0 auto;
-      width: 46px;
-      height: 46px;
+      flex:0 0 auto;
+      width: 46px; height:46px;
       border-radius: 16px;
       display:grid;
       place-items:center;
@@ -274,25 +310,25 @@
     }
 
     .demo h3{
-      margin: 0;
+      margin:0;
       font-size: 15.5px;
-      line-height: 1.2;
+      line-height:1.2;
       color: rgba(238,231,255,.92);
     }
     .demo p{
-      margin: 6px 0 0;
+      margin:6px 0 0;
       color: rgba(238,231,255,.74);
       font-size: 13.5px;
       line-height: 1.35;
     }
 
-    /* Right rail links normal */
+    /* Links (normal) */
     .links a{
       display:block;
       padding: 10px 12px;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
+      background: rgba(0,0,0,.14);
       text-decoration:none;
       color: rgba(238,231,255,.90);
       margin-bottom: 10px;
@@ -300,12 +336,12 @@
     }
     .links a:hover{
       transform: translateY(-1px);
-      background: rgba(0,0,0,.24);
+      background: rgba(0,0,0,.20);
       border-color: rgba(255,255,255,.18);
     }
 
     .about{
-      margin: 12px 0 0;
+      margin:12px 0 0;
       color: rgba(238,231,255,.78);
       font-size: 13.2px;
       line-height: 1.55;
@@ -315,11 +351,11 @@
       font-weight: 800;
     }
     .about ul{
-      margin: 10px 0 0;
+      margin:10px 0 0;
       padding-left: 18px;
       color: rgba(238,231,255,.72);
     }
-    .about li{ margin: 6px 0; }
+    .about li{ margin:6px 0; }
 
     .footer{
       margin-top: 18px;
