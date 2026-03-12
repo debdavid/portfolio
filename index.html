@@ -3,31 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Deborrah David — Demo Portfolio</title>
+  <title>Demo Portfolio — Deborrah David</title>
   <meta name="description" content="Streamlit demos and build artefacts: AI automation, data quality validation, and decision support." />
 
   <style>
     :root{
-      --bg0:#05040f;
-      --bg1:#0b0720;
-      --bg2:#14083a;
+      --black:#05030d;
+      --black2:#09051a;
 
-      --neonPurple:#A100FF;
+      --neonPurple:#B100FF;
       --neonPink:#FF2BD6;
+      --neonAqua:#00F5FF;
       --neonBlue:#3AA0FF;
       --neonYellow:#F7FF2B;
 
-      /* Darker/softer text */
-      --text:#DAD3EE;                    /* darker than white */
-      --muted:rgba(218,211,238,.72);
-      --soft:rgba(218,211,238,.62);
+      --text:#EEE7FF;
+      --muted:rgba(238,231,255,.78);
+
+      --card:rgba(255,255,255,.05);
+      --cardHover:rgba(255,255,255,.09);
       --stroke:rgba(255,255,255,.14);
 
-      --card:rgba(255,255,255,.06);
-      --cardHover:rgba(255,255,255,.09);
-
       --radius:18px;
-      --shadow: 0 22px 70px rgba(0,0,0,.55);
+      --shadow: 0 26px 80px rgba(0,0,0,.60);
 
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -39,11 +37,11 @@
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(1200px 650px at 15% 10%, rgba(161,0,255,.28), transparent 55%),
-        radial-gradient(900px 520px at 82% 18%, rgba(255,43,214,.20), transparent 55%),
-        radial-gradient(900px 600px at 55% 86%, rgba(58,160,255,.16), transparent 55%),
-        radial-gradient(800px 520px at 92% 75%, rgba(247,255,43,.12), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg2));
+        radial-gradient(1100px 620px at 16% 10%, rgba(177,0,255,.34), transparent 55%),
+        radial-gradient(900px 520px at 84% 16%, rgba(255,43,214,.26), transparent 55%),
+        radial-gradient(900px 560px at 55% 86%, rgba(0,245,255,.18), transparent 55%),
+        radial-gradient(760px 520px at 92% 76%, rgba(247,255,43,.16), transparent 60%),
+        linear-gradient(180deg, var(--black), var(--black2));
       min-height:100vh;
       overflow-x:hidden;
     }
@@ -54,45 +52,40 @@
       padding: 44px 18px 64px;
     }
 
-    /* Neon outline without rotating the panel:
-       - outer wrapper stays static
-       - pseudo-element background rotates under a mask
-    */
+    /* ==== Neon ring border (no visible centre rotation) ==== */
     .neonWrap{
       position: relative;
       border-radius: calc(var(--radius) + 10px);
-      padding: 1px; /* border thickness */
+      padding: 1px;
       overflow: hidden;
-      filter: drop-shadow(0 0 18px rgba(247,255,43,.14));
+      filter:
+        drop-shadow(0 0 10px rgba(247,255,43,.20))
+        drop-shadow(0 0 18px rgba(177,0,255,.12));
     }
 
     .neonWrap::before{
       content:"";
       position:absolute;
-      inset:-30%;
+      inset:-35%;
       background: conic-gradient(
         from 0deg,
         rgba(247,255,43,.10),
-        rgba(247,255,43,.95),
+        rgba(247,255,43,1),
         rgba(247,255,43,.10),
         rgba(247,255,43,.10)
       );
-      animation: spinBg 6.2s linear infinite;
+      animation: spinBg 6s linear infinite;
+      /* mask to show ONLY the ring */
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 2px; /* ring thickness */
+      border-radius: calc(var(--radius) + 12px);
     }
 
-    /* Mask the center so only an outline ring is visible */
-    .neonWrap::after{
-      content:"";
-      position:absolute;
-      inset: 1px; /* matches padding */
-      border-radius: calc(var(--radius) + 9px);
-      background: linear-gradient(180deg, rgba(10,6,26,.92), rgba(10,6,26,.86));
-      z-index: 0;
-    }
-
-    @keyframes spinBg{
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spinBg { to { transform: rotate(360deg); } }
 
     @media (prefers-reduced-motion: reduce){
       .neonWrap::before{ animation: none; }
@@ -113,19 +106,23 @@
     .hero{
       position: relative;
       padding: 26px 22px;
-      background: linear-gradient(135deg, rgba(161,0,255,.10), rgba(255,43,214,.06), rgba(58,160,255,.06));
+      background: linear-gradient(135deg,
+        rgba(177,0,255,.12),
+        rgba(255,43,214,.08),
+        rgba(0,245,255,.06)
+      );
     }
     .hero:before{
       content:"";
       position:absolute;
       inset:-2px;
       background: linear-gradient(90deg,
-        rgba(161,0,255,.28),
-        rgba(255,43,214,.22),
-        rgba(58,160,255,.22),
-        rgba(247,255,43,.14)
+        rgba(177,0,255,.34),
+        rgba(255,43,214,.26),
+        rgba(0,245,255,.20),
+        rgba(247,255,43,.16)
       );
-      filter: blur(28px);
+      filter: blur(30px);
       opacity:.22;
       z-index:0;
     }
@@ -136,7 +133,14 @@
       font-size: clamp(28px, 3.2vw, 42px);
       letter-spacing: -.02em;
       line-height: 1.12;
-      color: rgba(234,228,252,.95); /* slightly brighter than body */
+    }
+
+    .accentText{
+      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 950;
     }
 
     .sub{
@@ -144,24 +148,17 @@
       color: var(--muted);
       font-size: 15px;
       line-height: 1.5;
-      max-width: 80ch;
-    }
-
-    .accentText{
-      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 900;
+      max-width: 84ch;
     }
 
     .underline{
       height: 2px;
-      width: 180px;
+      width: 200px;
       margin-top: 12px;
-      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
+      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
       border-radius: 999px;
-      opacity: .85;
+      opacity: .95;
+      box-shadow: 0 0 14px rgba(247,255,43,.20);
     }
 
     .tag{
@@ -176,7 +173,8 @@
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 12.5px;
-      color: rgba(218,211,238,.78);
+      color: rgba(247,255,43,.92);   /* neon yellow text */
+      box-shadow: 0 0 10px rgba(247,255,43,.10);
       backdrop-filter: blur(10px);
       white-space: nowrap;
     }
@@ -206,13 +204,14 @@
       font-size: 13px;
       letter-spacing: .10em;
       text-transform: uppercase;
-      color: rgba(218,211,238,.78);
+      color: rgba(247,255,43,.92);  /* neon yellow headings */
+      text-shadow: 0 0 12px rgba(247,255,43,.18);
     }
     .spark{
       width: 10px; height: 10px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--neonPurple), var(--neonPink), var(--neonBlue), var(--neonYellow));
-      box-shadow: 0 0 18px rgba(161,0,255,.25);
+      background: linear-gradient(135deg, var(--neonPurple), var(--neonPink), var(--neonAqua), var(--neonYellow));
+      box-shadow: 0 0 18px rgba(0,245,255,.16);
     }
 
     /* DEMO CARDS */
@@ -221,8 +220,8 @@
       gap: 14px;
       padding: 14px;
       border-radius: 16px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(247,255,43,.16);
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
       text-decoration:none;
       color: inherit;
@@ -230,8 +229,9 @@
     }
     .demo:hover{
       transform: translateY(-2px);
-      background: var(--cardHover);
-      border-color: rgba(255,255,255,.14);
+      background: rgba(0,0,0,.28);
+      border-color: rgba(247,255,43,.28);
+      box-shadow: 0 0 18px rgba(247,255,43,.10);
     }
 
     .badge{
@@ -242,22 +242,24 @@
       display:grid;
       place-items:center;
       border: 1px solid rgba(255,255,255,.14);
-      background: linear-gradient(135deg, rgba(161,0,255,.18), rgba(255,43,214,.12), rgba(58,160,255,.12));
-      font-weight: 800;
+      background: linear-gradient(135deg, rgba(177,0,255,.22), rgba(255,43,214,.16), rgba(0,245,255,.14));
+      font-weight: 900;
       font-family: var(--mono);
       letter-spacing: .04em;
-      color: rgba(234,228,252,.92);
+      color: rgba(247,255,43,.92); /* neon yellow */
+      text-shadow: 0 0 10px rgba(247,255,43,.12);
     }
 
     .demo h3{
       margin: 0;
       font-size: 15.5px;
       line-height: 1.2;
-      color: rgba(234,228,252,.93);
+      color: rgba(247,255,43,.92); /* neon yellow titles */
+      text-shadow: 0 0 12px rgba(247,255,43,.12);
     }
     .demo p{
       margin: 6px 0 0;
-      color: var(--muted);
+      color: rgba(238,231,255,.74);
       font-size: 13.5px;
       line-height: 1.35;
     }
@@ -267,40 +269,42 @@
       display:block;
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(247,255,43,.18);
+      background: rgba(0,0,0,.18);
       text-decoration:none;
-      color: rgba(234,228,252,.88);
+      color: rgba(247,255,43,.92); /* neon yellow */
       margin-bottom: 10px;
-      transition: background .12s ease, border-color .12s ease;
+      transition: background .12s ease, border-color .12s ease, transform .12s ease;
+      text-shadow: 0 0 12px rgba(247,255,43,.14);
     }
     .links a:hover{
-      background: rgba(255,255,255,.07);
-      border-color: rgba(255,255,255,.14);
+      transform: translateY(-1px);
+      background: rgba(0,0,0,.26);
+      border-color: rgba(247,255,43,.28);
+      box-shadow: 0 0 18px rgba(247,255,43,.10);
     }
 
     .about{
       margin: 12px 0 0;
-      color: rgba(218,211,238,.74);
+      color: rgba(238,231,255,.78);
       font-size: 13.2px;
       line-height: 1.55;
     }
     .about strong{
-      color: rgba(234,228,252,.92);
-      font-weight: 700;
+      color: rgba(247,255,43,.92);
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(247,255,43,.12);
     }
     .about ul{
       margin: 10px 0 0;
       padding-left: 18px;
-      color: rgba(218,211,238,.70);
+      color: rgba(238,231,255,.72);
     }
-    .about li{
-      margin: 6px 0;
-    }
+    .about li{ margin: 6px 0; }
 
     .footer{
       margin-top: 18px;
-      color: rgba(218,211,238,.55);
+      color: rgba(238,231,255,.58);
       font-size: 12.5px;
       text-align:center;
     }
@@ -310,11 +314,11 @@
 <body>
   <div class="wrap">
 
-    <!-- HERO (neon outline box #1) -->
+    <!-- HERO -->
     <div class="neonWrap">
       <div class="neonInner">
         <div class="hero">
-          <h1><span class="accentText">Demo Portfolio</span> — Deborrah David</h1>
+          <h1><span class="accentText">Demo Portfolio</span></h1>
           <p class="sub">
             Streamlit demonstrations and build artefacts focused on AI automation, data-quality validation,
             and decision support.
@@ -331,7 +335,7 @@
     </div>
 
     <div class="grid">
-      <!-- LEFT: DEMOS (neon outline box #2) -->
+      <!-- STREAMLIT APPS -->
       <div class="neonWrap">
         <div class="neonInner">
           <div class="card">
@@ -356,7 +360,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: LINKS/ABOUT (neon outline box #3) -->
+      <!-- LINKS / ABOUT -->
       <div class="neonWrap">
         <div class="neonInner">
           <div class="card">
@@ -371,8 +375,8 @@
             <div class="about">
               <p style="margin:0;">
                 I build practical AI systems that reduce operational friction and improve decision quality.
-                My background spans data science, cloud analytics, and applied automation—focused on turning
-                ambiguous workflows into reliable, testable solutions.
+                My work spans data science, cloud analytics, and applied automation—focused on turning ambiguous
+                workflows into reliable, testable solutions.
               </p>
               <ul>
                 <li><strong>Method:</strong> define the decision + success metric, instrument data quality, then iterate with structured outputs and human review where needed.</li>
