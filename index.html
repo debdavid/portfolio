@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Deborrah David — Demo Hub</title>
+  <meta name="description" content="Streamlit demos, GitHub repos, and contact links." />
+  <style>
+    :root{
+      --bg0:#0b0720;
+      --bg1:#120a2e;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.12);
+      --text:#f7f7ff;
+      --muted: rgba(247,247,255,.75);
+      --stroke: rgba(255,255,255,.16);
+      --pink:#ff4fd8;
+      --purple:#7c4dff;
+      --blue:#3aa0ff;
+      --teal:#2ee7d6;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(124,77,255,.35), transparent 55%),
+        radial-gradient(900px 500px at 80% 20%, rgba(255,79,216,.28), transparent 55%),
+        radial-gradient(900px 600px at 50% 85%, rgba(58,160,255,.22), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 18px 60px;
+    }
+
+    .hero{
+      position:relative;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(135deg, rgba(255,79,216,.10), rgba(124,77,255,.08), rgba(58,160,255,.08));
+      border-radius: calc(var(--radius) + 8px);
+      padding: 26px 22px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: linear-gradient(90deg, rgba(255,79,216,.35), rgba(124,77,255,.35), rgba(58,160,255,.35));
+      filter: blur(26px);
+      opacity:.35;
+      z-index:0;
+    }
+    .hero > *{ position:relative; z-index:1; }
+
+    h1{
+      margin: 0 0 6px;
+      font-size: clamp(28px, 3.2vw, 40px);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+    .tagline{
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .pills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 14px;
+    }
+    .pill{
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      color: rgba(247,247,255,.86);
+      backdrop-filter: blur(10px);
+    }
+    .pill strong{
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.28);
+      backdrop-filter: blur(10px);
+    }
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin: 0 0 12px;
+      font-size: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(247,247,255,.78);
+    }
+    .dot{
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+      box-shadow: 0 0 18px rgba(255,79,216,.35);
+    }
+
+    .demo{
+      display:flex;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      text-decoration:none;
+      color: inherit;
+      margin-bottom: 12px;
+    }
+    .demo:hover{
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.075);
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .badge{
+      flex: 0 0 auto;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(255,79,216,.28), rgba(124,77,255,.22), rgba(58,160,255,.22));
+      border: 1px solid rgba(255,255,255,.18);
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+
+    .demo h3{
+      margin: 0;
+      font-size: 15.5px;
+      line-height: 1.2;
+    }
+    .demo p{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.35;
+    }
+    .url{
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(247,247,255,.78);
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    .links a{
+      display:block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      text-decoration:none;
+      color: rgba(247,247,255,.92);
+      margin-bottom: 10px;
+      transition: background .12s ease, border-color .12s ease;
+    }
+    .links a:hover{
+      background: rgba(255,255,255,.075);
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .footer{
+      margin-top: 18px;
+      color: rgba(247,247,255,.65);
+      font-size: 12.5px;
+      text-align:center;
+    }
+
+    .accent{
+      background: linear-gradient(90deg, var(--pink), var(--purple), var(--blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1><span class="accent">Demo Hub</span> — Deborrah David</h1>
+      <p class="tagline">
+        Streamlit demos and build artefacts showcasing AI automation, data quality validation, and decision support.
+      </p>
+
+      <div class="pills">
+        <div class="pill"><strong>Focus:</strong> AI automation & agents</div>
+        <div class="pill"><strong>Tooling:</strong> Python • VS Code • Git</div>
+        <div class="pill"><strong>Apps:</strong> Streamlit</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: DEMOS -->
+      <div class="card">
+        <div class="section-title"><span class="dot"></span> Streamlit Apps</div>
+
+        <a class="demo" href="https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/#2-audit-result" target="_blank" rel="noreferrer">
+          <div class="badge">NYC</div>
+          <div>
+            <h3>NYC Price Check (Streamlit)</h3>
+            <p>Decision-support demo for benchmarking and auditing price/quote signals.</p>
+            <div class="url">https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/</div>
+          </div>
+        </a>
+
+        <a class="demo" href="https://mineops-copilot-4mrzkfd5jdbszf86cdt4vu.streamlit.app/" target="_blank" rel="noreferrer">
+          <div class="badge">OPS</div>
+          <div>
+            <h3>VANTAGE — Operations Intelligence Engine (Streamlit)</h3>
+            <p>Multi-agent workflow demo generating operational guidance from telemetry-derived risk signals.</p>
+            <div class="url">https://mineops-copilot-4mrzkfd5jdbszf86cdt4vu.streamlit.app/</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- RIGHT: LINKS -->
+      <div class="card">
+        <div class="section-title"><span class="dot"></span> Links</div>
+        <div class="links">
+          <a href="https://github.com/debdavid" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/deborrahdavid" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:deborrahdavid777@gmail.com">Email</a>
+        </div>
+
+        <div class="section-title" style="margin-top:16px;"><span class="dot"></span> Notes</div>
+        <p class="tagline" style="margin:0;">
+          For employers: demos are hosted on Streamlit; source code is available via GitHub.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      © <span id="year"></span> Deborrah David • Built for quick demo access
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
