@@ -8,22 +8,28 @@
 
   <style>
     :root{
-      --black:#05030d;
-      --black2:#09051a;
+      --bg0:#05030d;
+      --bg1:#08051a;
+      --bg2:#0c0724;
 
       --neonPurple:#B100FF;
       --neonPink:#FF2BD6;
       --neonAqua:#00F5FF;
       --neonYellow:#F7FF2B;
 
-      --text:#EEE7FF;
-      --muted:rgba(238,231,255,.78);
-
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.04);
+      --text:#EFEAFF;
+      --muted:rgba(239,234,255,.78);
 
       --radius:18px;
-      --shadow: 0 26px 86px rgba(0,0,0,.62);
+
+      /* Premium “black-glass” */
+      --panel: rgba(8,6,18,.62);
+      --panel2: rgba(8,6,18,.48);
+
+      --stroke: rgba(255,255,255,.10);
+
+      --shadow: 0 26px 90px rgba(0,0,0,.62);
+      --softShadow: 0 14px 40px rgba(0,0,0,.45);
 
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -36,10 +42,10 @@
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(1200px 700px at 18% 10%, rgba(177,0,255,.26), transparent 60%),
-        radial-gradient(900px 540px at 85% 18%, rgba(255,43,214,.20), transparent 58%),
-        radial-gradient(900px 640px at 55% 88%, rgba(0,245,255,.13), transparent 62%),
-        linear-gradient(180deg, var(--black), var(--black2));
+        radial-gradient(1200px 700px at 18% 10%, rgba(177,0,255,.22), transparent 60%),
+        radial-gradient(900px 540px at 85% 18%, rgba(255,43,214,.18), transparent 58%),
+        radial-gradient(900px 640px at 55% 88%, rgba(0,245,255,.11), transparent 62%),
+        linear-gradient(180deg, var(--bg0), var(--bg2));
       min-height:100vh;
       overflow-x:hidden;
     }
@@ -50,48 +56,44 @@
       padding: 44px 18px 64px;
     }
 
-    /* Static neon-yellow border wrapper */
+    /* Static thin neon-yellow border (tasteful) */
     .panelWrap{
       border-radius: calc(var(--radius) + 10px);
-      padding: 2px; /* border thickness */
-      background: rgba(247,255,43,.10);
+      padding: 1px; /* thin border */
+      background: rgba(247,255,43,.14);
       box-shadow:
-        0 0 0 1px rgba(247,255,43,.18),
-        0 0 18px rgba(247,255,43,.14);
+        0 0 0 1px rgba(247,255,43,.14),
+        0 0 16px rgba(247,255,43,.10);
     }
 
-    .panelInner{
-      border-radius: calc(var(--radius) + 8px);
-      border: 1px solid rgba(255,255,255,.10);
+    .panel{
+      border-radius: calc(var(--radius) + 9px);
+      border: 1px solid var(--stroke);
       background: var(--panel);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       overflow:hidden;
     }
 
-    /* HERO */
+    /* HERO CONTENT */
     .hero{
-      position:relative;
-      padding: 26px 22px;
-      background:
-        linear-gradient(135deg,
-          rgba(177,0,255,.10),
-          rgba(255,43,214,.06),
-          rgba(0,245,255,.05)
-        );
+      padding: 26px 22px 22px;
+      position: relative;
     }
 
+    /* subtle internal glow (no purple haze) */
     .hero::before{
       content:"";
       position:absolute;
       inset:-2px;
       background:
-        radial-gradient(680px 280px at 20% 20%, rgba(177,0,255,.18), transparent 60%),
-        radial-gradient(680px 280px at 80% 35%, rgba(255,43,214,.12), transparent 60%),
-        radial-gradient(720px 320px at 55% 90%, rgba(0,245,255,.10), transparent 65%);
+        radial-gradient(680px 260px at 18% 18%, rgba(177,0,255,.14), transparent 60%),
+        radial-gradient(680px 260px at 82% 30%, rgba(255,43,214,.10), transparent 60%),
+        radial-gradient(720px 280px at 55% 92%, rgba(0,245,255,.08), transparent 65%);
       filter: blur(22px);
-      opacity:.30;
-      z-index:0;
+      opacity:.35;
+      pointer-events:none;
     }
     .hero > *{ position:relative; z-index:1; }
 
@@ -102,20 +104,14 @@
       line-height: 1.12;
     }
 
-    /* Demo Portfolio = neon yellow gradient */
+    /* Demo Portfolio: yellow neon gradient */
     .accentText{
-      background: linear-gradient(90deg,
-        rgba(247,255,43,.70),
-        rgba(247,255,43,1),
-        rgba(247,255,43,.70)
-      );
+      background: linear-gradient(90deg, rgba(247,255,43,.70), rgba(247,255,43,1), rgba(247,255,43,.70));
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
       font-weight: 950;
-      text-shadow:
-        0 0 10px rgba(247,255,43,.18),
-        0 0 18px rgba(247,255,43,.10);
+      text-shadow: 0 0 12px rgba(247,255,43,.16);
     }
 
     .sub{
@@ -128,12 +124,12 @@
 
     .underline{
       height:2px;
-      width: 210px;
+      width: 220px;
       margin-top:12px;
       background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
       border-radius: 999px;
       opacity:.90;
-      box-shadow: 0 0 14px rgba(247,255,43,.10);
+      box-shadow: 0 0 12px rgba(247,255,43,.08);
     }
 
     .tag{
@@ -142,14 +138,13 @@
       flex-wrap:wrap;
       gap:10px;
     }
-
     .pill{
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.14);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 12.5px;
-      color: rgba(238,231,255,.86);
+      color: rgba(239,234,255,.84);
       backdrop-filter: blur(10px);
       white-space: nowrap;
     }
@@ -157,7 +152,7 @@
     /* GRID */
     .grid{
       display:grid;
-      grid-template-columns: 1.35fr .65fr;
+      grid-template-columns: 1.55fr .55fr;
       gap: 16px;
       margin-top: 18px;
     }
@@ -165,12 +160,13 @@
       .grid{ grid-template-columns: 1fr; }
     }
 
-    .card{
+    /* PANEL BODY PADDING (no extra inner “card box”) */
+    .panelBody{
       padding: 18px;
-      border-radius: calc(var(--radius) + 8px);
-      background: var(--panel2);
+      background: transparent;
     }
 
+    /* Section titles: neon yellow (kept) */
     .sectionTitle{
       display:flex;
       align-items:center;
@@ -190,13 +186,15 @@
       box-shadow: 0 0 14px rgba(0,245,255,.12);
     }
 
+    /* Demo cards (projects) – look like premium list items, not nested panels */
     .demo{
       display:flex;
       gap:14px;
       padding:14px;
       border-radius:16px;
-      background: rgba(0,0,0,.16);
+      background: rgba(0,0,0,.22);
       border: 1px solid rgba(255,255,255,.10);
+      box-shadow: var(--softShadow);
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
       text-decoration:none;
       color: inherit;
@@ -204,7 +202,7 @@
     }
     .demo:hover{
       transform: translateY(-2px);
-      background: rgba(0,0,0,.22);
+      background: rgba(0,0,0,.30);
       border-color: rgba(255,255,255,.16);
     }
 
@@ -227,52 +225,53 @@
       margin:0;
       font-size: 15.5px;
       line-height:1.2;
-      color: rgba(238,231,255,.92);
+      color: rgba(239,234,255,.92);
     }
     .demo p{
       margin:6px 0 0;
-      color: rgba(238,231,255,.74);
+      color: rgba(239,234,255,.72);
       font-size: 13.5px;
       line-height: 1.35;
     }
 
+    /* Right rail links */
     .links a{
       display:block;
       padding: 10px 12px;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
+      background: rgba(0,0,0,.18);
       text-decoration:none;
-      color: rgba(238,231,255,.90);
+      color: rgba(239,234,255,.90);
       margin-bottom: 10px;
       transition: background .12s ease, border-color .12s ease, transform .12s ease;
     }
     .links a:hover{
       transform: translateY(-1px);
-      background: rgba(0,0,0,.20);
+      background: rgba(0,0,0,.24);
       border-color: rgba(255,255,255,.18);
     }
 
     .about{
       margin:12px 0 0;
-      color: rgba(238,231,255,.78);
+      color: rgba(239,234,255,.76);
       font-size: 13.2px;
       line-height: 1.55;
     }
     .about strong{
-      color: rgba(238,231,255,.92);
+      color: rgba(239,234,255,.92);
       font-weight: 800;
     }
     .about ul{
       margin:10px 0 0;
       padding-left: 18px;
-      color: rgba(238,231,255,.72);
+      color: rgba(239,234,255,.70);
     }
     .about li{ margin:6px 0; }
 
     .footer{
       margin-top: 18px;
-      color: rgba(238,231,255,.58);
+      color: rgba(239,234,255,.56);
       font-size: 12.5px;
       text-align:center;
     }
@@ -282,9 +281,9 @@
 <body>
   <div class="wrap">
 
-    <!-- HERO panel -->
+    <!-- HERO PANEL -->
     <div class="panelWrap">
-      <div class="panelInner">
+      <div class="panel">
         <div class="hero">
           <h1><span class="accentText">Demo Portfolio</span></h1>
           <p class="sub">
@@ -303,10 +302,10 @@
     </div>
 
     <div class="grid">
-      <!-- Streamlit Applications panel -->
+      <!-- STREAMLIT APPLICATIONS PANEL -->
       <div class="panelWrap">
-        <div class="panelInner">
-          <div class="card">
+        <div class="panel">
+          <div class="panelBody">
             <div class="sectionTitle"><span class="spark"></span> Streamlit Applications</div>
 
             <a class="demo" href="https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/#2-audit-result" target="_blank" rel="noreferrer">
@@ -328,10 +327,10 @@
         </div>
       </div>
 
-      <!-- Links/About panel -->
+      <!-- LINKS / ABOUT PANEL -->
       <div class="panelWrap">
-        <div class="panelInner">
-          <div class="card">
+        <div class="panel">
+          <div class="panelBody">
             <div class="sectionTitle"><span class="spark"></span> Links</div>
             <div class="links">
               <a href="https://github.com/debdavid" target="_blank" rel="noreferrer">GitHub</a>
