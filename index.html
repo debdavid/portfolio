@@ -10,9 +10,6 @@
     :root{
       --black:#05030d;
       --black2:#09051a;
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.04);
-      --stroke:rgba(255,255,255,.14);
 
       --neonPurple:#B100FF;
       --neonPink:#FF2BD6;
@@ -21,6 +18,9 @@
 
       --text:#EEE7FF;
       --muted:rgba(238,231,255,.78);
+
+      --panel:rgba(255,255,255,.055);
+      --panel2:rgba(255,255,255,.04);
 
       --radius:18px;
       --shadow: 0 26px 86px rgba(0,0,0,.62);
@@ -42,70 +42,26 @@
         linear-gradient(180deg, var(--black), var(--black2));
       min-height:100vh;
       overflow-x:hidden;
-      position:relative;
     }
 
     .wrap{
       max-width: 1040px;
       margin: 0 auto;
       padding: 44px 18px 64px;
-      position:relative;
-      z-index:1;
     }
 
-    /* Neon runner outline (clean ring; no “laser” overlay anywhere) */
-    .neonWrap{
-      position: relative;
+    /* Static neon-yellow border wrapper */
+    .panelWrap{
       border-radius: calc(var(--radius) + 10px);
-      padding: 1px;
-      overflow:hidden;
-      background: rgba(0,0,0,0);
-    }
-
-    .neonWrap::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: inherit;
-      padding: 2px;
-      background: conic-gradient(
-        from 0deg,
-        rgba(247,255,43,.05),
-        rgba(247,255,43,.95),
-        rgba(247,255,43,.05),
-        rgba(247,255,43,.05)
-      );
-      animation: ringSpin 7.5s linear infinite;
-
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-    }
-
-    .neonWrap::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: inherit;
+      padding: 2px; /* border thickness */
+      background: rgba(247,255,43,.10);
       box-shadow:
-        0 0 0 1px rgba(247,255,43,.06),
-        0 0 22px rgba(247,255,43,.10),
-        0 0 28px rgba(177,0,255,.06);
-      pointer-events:none;
+        0 0 0 1px rgba(247,255,43,.18),
+        0 0 18px rgba(247,255,43,.14);
     }
 
-    @keyframes ringSpin{ to { transform: rotate(360deg); } }
-
-    @media (prefers-reduced-motion: reduce){
-      .neonWrap::before{ animation:none; }
-    }
-
-    .neonInner{
-      position:relative;
-      z-index:1;
-      border-radius: calc(var(--radius) + 9px);
+    .panelInner{
+      border-radius: calc(var(--radius) + 8px);
       border: 1px solid rgba(255,255,255,.10);
       background: var(--panel);
       box-shadow: var(--shadow);
@@ -146,7 +102,7 @@
       line-height: 1.12;
     }
 
-    /* Demo Portfolio: neon yellow gradient */
+    /* Demo Portfolio = neon yellow gradient */
     .accentText{
       background: linear-gradient(90deg,
         rgba(247,255,43,.70),
@@ -211,7 +167,7 @@
 
     .card{
       padding: 18px;
-      border-radius: calc(var(--radius) + 9px);
+      border-radius: calc(var(--radius) + 8px);
       background: var(--panel2);
     }
 
@@ -326,9 +282,9 @@
 <body>
   <div class="wrap">
 
-    <!-- HERO -->
-    <div class="neonWrap">
-      <div class="neonInner">
+    <!-- HERO panel -->
+    <div class="panelWrap">
+      <div class="panelInner">
         <div class="hero">
           <h1><span class="accentText">Demo Portfolio</span></h1>
           <p class="sub">
@@ -347,9 +303,9 @@
     </div>
 
     <div class="grid">
-      <!-- STREAMLIT APPS -->
-      <div class="neonWrap">
-        <div class="neonInner">
+      <!-- Streamlit Applications panel -->
+      <div class="panelWrap">
+        <div class="panelInner">
           <div class="card">
             <div class="sectionTitle"><span class="spark"></span> Streamlit Applications</div>
 
@@ -372,9 +328,9 @@
         </div>
       </div>
 
-      <!-- LINKS / ABOUT -->
-      <div class="neonWrap">
-        <div class="neonInner">
+      <!-- Links/About panel -->
+      <div class="panelWrap">
+        <div class="panelInner">
           <div class="card">
             <div class="sectionTitle"><span class="spark"></span> Links</div>
             <div class="links">
