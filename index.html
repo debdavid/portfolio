@@ -8,15 +8,14 @@
 
   <style>
     :root{
-      /* Dark base + neon accents (purple/pink/blue + yellow) */
-      --bg0:#05040f;     /* near-black */
+      --bg0:#05040f;
       --bg1:#0b0720;
       --bg2:#14083a;
 
       --neonPurple:#A100FF;
       --neonPink:#FF2BD6;
       --neonBlue:#3AA0FF;
-      --neonYellow:#F7FF2B;  /* neon yellow */
+      --neonYellow:#F7FF2B;
       --neonCyan:#2EE7D6;
 
       --text:#F7F3FF;
@@ -54,29 +53,59 @@
       padding: 44px 18px 64px;
     }
 
-    /* HERO */
-    .hero{
-      position:relative;
-      border: 1px solid var(--stroke);
-      background: linear-gradient(135deg, rgba(161,0,255,.12), rgba(255,43,214,.08), rgba(58,160,255,.08));
+    /* Neon outline wrapper (animated yellow "runner") */
+    .neonWrap{
+      position: relative;
       border-radius: calc(var(--radius) + 10px);
-      padding: 26px 22px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
+      padding: 1px; /* creates space for animated border */
+      background: conic-gradient(
+        from 0deg,
+        rgba(247,255,43,.10),
+        rgba(247,255,43,.95),
+        rgba(247,255,43,.10),
+        rgba(247,255,43,.10)
+      );
+      filter: drop-shadow(0 0 18px rgba(247,255,43,.18));
+      animation: spin 5.5s linear infinite;
     }
 
+    @keyframes spin{
+      to { transform: rotate(360deg); }
+    }
+
+    /* Pause motion for users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .neonWrap{ animation: none; }
+    }
+
+    /* Inner panel keeps content stable (not rotating) */
+    .neonInner{
+      border-radius: calc(var(--radius) + 9px);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    /* HERO */
+    .hero{
+      position: relative;
+      padding: 26px 22px;
+      background: linear-gradient(135deg, rgba(161,0,255,.12), rgba(255,43,214,.08), rgba(58,160,255,.08));
+    }
     .hero:before{
       content:"";
       position:absolute;
       inset:-2px;
       background: linear-gradient(90deg,
-        rgba(161,0,255,.45),
-        rgba(255,43,214,.40),
-        rgba(58,160,255,.40),
-        rgba(247,255,43,.28)
+        rgba(161,0,255,.38),
+        rgba(255,43,214,.30),
+        rgba(58,160,255,.30),
+        rgba(247,255,43,.18)
       );
       filter: blur(28px);
-      opacity:.30;
+      opacity:.26;
       z-index:0;
     }
     .hero > *{ position:relative; z-index:1; }
@@ -87,13 +116,29 @@
       letter-spacing: -.02em;
       line-height: 1.12;
     }
-
     .sub{
       margin: 0;
       color: var(--muted);
       font-size: 15px;
       line-height: 1.5;
-      max-width: 78ch;
+      max-width: 80ch;
+    }
+
+    .accentText{
+      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 900;
+    }
+
+    .underline{
+      height: 2px;
+      width: 180px;
+      margin-top: 12px;
+      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
+      border-radius: 999px;
+      opacity: .95;
     }
 
     .tag{
@@ -113,14 +158,6 @@
       white-space: nowrap;
     }
 
-    .accentText{
-      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 900;
-    }
-
     /* GRID */
     .grid{
       display:grid;
@@ -133,12 +170,9 @@
     }
 
     .card{
-      border: 1px solid var(--stroke);
-      background: var(--card);
-      border-radius: var(--radius);
       padding: 18px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.28);
-      backdrop-filter: blur(10px);
+      border-radius: calc(var(--radius) + 9px);
+      background: rgba(255,255,255,.06);
     }
 
     .sectionTitle{
@@ -203,7 +237,7 @@
       line-height: 1.35;
     }
 
-    /* Hide raw URLs in the UI (links still work via <a href="...">) */
+    /* Raw URLs hidden (cards remain clickable) */
     .url{ display:none; }
 
     /* Right rail links */
@@ -223,11 +257,23 @@
       border-color: rgba(255,255,255,.18);
     }
 
-    .note{
+    .about{
       margin: 12px 0 0;
-      color: rgba(247,243,255,.70);
-      font-size: 12.8px;
-      line-height: 1.45;
+      color: rgba(247,243,255,.78);
+      font-size: 13.2px;
+      line-height: 1.55;
+    }
+    .about strong{
+      color: rgba(247,243,255,.95);
+      font-weight: 700;
+    }
+    .about ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: rgba(247,243,255,.72);
+    }
+    .about li{
+      margin: 6px 0;
     }
 
     .footer{
@@ -236,71 +282,85 @@
       font-size: 12.5px;
       text-align:center;
     }
-
-    /* Subtle neon underline under headings */
-    .underline{
-      height: 2px;
-      width: 140px;
-      margin-top: 10px;
-      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
-      border-radius: 999px;
-      opacity: .9;
-    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="hero">
-      <h1><span class="accentText">Demo Portfolio</span> — Deborrah David</h1>
-      <p class="sub">
-        Streamlit demonstrations and build artefacts focused on AI automation, data-quality validation,
-        and decision support.
-      </p>
-      <div class="underline"></div>
 
-      <div class="tag">
-        <div class="pill">AI automation & agent workflows</div>
-        <div class="pill">Python • VS Code • Git</div>
-        <div class="pill">Streamlit demos</div>
+    <!-- HERO (neon outline box #1) -->
+    <div class="neonWrap">
+      <div class="neonInner">
+        <div class="hero">
+          <h1><span class="accentText">Demo Portfolio</span> — Deborrah David</h1>
+          <p class="sub">
+            Streamlit demonstrations and build artefacts focused on AI automation, data-quality validation,
+            and decision support.
+          </p>
+          <div class="underline"></div>
+
+          <div class="tag">
+            <div class="pill">AI automation & agent workflows</div>
+            <div class="pill">Python • VS Code • Git</div>
+            <div class="pill">Streamlit demos</div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="grid">
-      <!-- LEFT: DEMOS -->
-      <div class="card">
-        <div class="sectionTitle"><span class="spark"></span> Streamlit Applications</div>
+      <!-- LEFT: DEMOS (neon outline box #2) -->
+      <div class="neonWrap" style="animation-duration: 6.3s;">
+        <div class="neonInner">
+          <div class="card">
+            <div class="sectionTitle"><span class="spark"></span> Streamlit Applications</div>
 
-        <a class="demo" href="https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/#2-audit-result" target="_blank" rel="noreferrer">
-          <div class="badge">NYC</div>
-          <div>
-            <h3>NYC Price Check</h3>
-            <p>Decision-support demo for benchmarking and auditing price/quote signals.</p>
-          </div>
-        </a>
+            <a class="demo" href="https://azure-databricks-taxi-project-7xsbujddaummwbcsyhxbiq.streamlit.app/#2-audit-result" target="_blank" rel="noreferrer">
+              <div class="badge">NYC</div>
+              <div>
+                <h3>NYC Price Check</h3>
+                <p>Decision-support demo for benchmarking and auditing price/quote signals.</p>
+              </div>
+            </a>
 
-        <a class="demo" href="https://mineops-copilot-4mrzkfd5jdbszf86cdt4vu.streamlit.app/" target="_blank" rel="noreferrer">
-          <div class="badge">OPS</div>
-          <div>
-            <h3>VANTAGE — Operations Intelligence Engine</h3>
-            <p>Multi-agent workflow producing operational directives from telemetry-derived risk signals.</p>
+            <a class="demo" href="https://mineops-copilot-4mrzkfd5jdbszf86cdt4vu.streamlit.app/" target="_blank" rel="noreferrer">
+              <div class="badge">OPS</div>
+              <div>
+                <h3>VANTAGE — Operations Intelligence Engine</h3>
+                <p>Multi-agent workflow producing operational directives from telemetry-derived risk signals.</p>
+              </div>
+            </a>
           </div>
-        </a>
+        </div>
       </div>
 
-      <!-- RIGHT: LINKS -->
-      <div class="card">
-        <div class="sectionTitle"><span class="spark"></span> Links</div>
-        <div class="links">
-          <a href="https://github.com/debdavid" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/in/deborrahdavid" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="mailto:deborrahdavid777@gmail.com">Email</a>
-        </div>
+      <!-- RIGHT: LINKS/ABOUT (neon outline box #3) -->
+      <div class="neonWrap" style="animation-duration: 7.1s;">
+        <div class="neonInner">
+          <div class="card">
+            <div class="sectionTitle"><span class="spark"></span> Links</div>
+            <div class="links">
+              <a href="https://github.com/debdavid" target="_blank" rel="noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/deborrahdavid" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a href="mailto:deborrahdavid777@gmail.com">Email</a>
+            </div>
 
-        <div class="sectionTitle" style="margin-top:16px;"><span class="spark"></span> About</div>
-        <p class="note">
-          Demos are hosted on Streamlit. Source code and implementation notes are available via GitHub.
-        </p>
+            <div class="sectionTitle" style="margin-top:16px;"><span class="spark"></span> About</div>
+            <div class="about">
+              <p style="margin:0;">
+                I build practical AI systems that reduce operational friction and improve decision quality.
+                My background spans data science, cloud analytics, and applied automation—focused on turning
+                ambiguous workflows into reliable, testable solutions.
+              </p>
+
+              <ul>
+                <li><strong>Method:</strong> frame the decision + success metric, instrument data quality, then iterate with structured outputs and human review where needed.</li>
+                <li><strong>Outcomes:</strong> exception-first triage, audit-ready evidence trails, and lightweight interfaces that support real users—not just notebooks.</li>
+                <li><strong>Operating style:</strong> cost-conscious prototyping, clear documentation, and rapid iteration from feedback.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
