@@ -48,37 +48,54 @@
       padding: 44px 18px 64px;
     }
 
-    /* --- Neon border ring: contained per panel (no stray streaks) --- */
+    /* ===== Neon running outline (no stray streaks) =====
+       Key changes vs before:
+       - NO drop-shadow filter on wrapper (prevents screen-level streaks)
+       - inset:0 (no oversized gradient)
+       - mask shows only ring
+       - overflow hidden to contain everything
+    */
     .neonWrap{
       position: relative;
       border-radius: calc(var(--radius) + 10px);
-      padding: 1px;           /* border thickness */
-      overflow: hidden;       /* IMPORTANT: prevents any overflow streaks */
-      filter: drop-shadow(0 0 12px rgba(247,255,43,.14));
+      padding: 1px;               /* ring thickness container */
+      overflow: hidden;
+      background: rgba(0,0,0,.0); /* keep clean */
     }
 
-    /* Rotating conic gradient stays INSIDE wrapper and is masked to ring only */
     .neonWrap::before{
       content:"";
       position:absolute;
-      inset:-25%;
+      inset:0;                    /* critical: no negative inset */
+      border-radius: inherit;
+      padding: 2px;               /* ring thickness */
       background: conic-gradient(
         from 0deg,
-        rgba(247,255,43,.10),
+        rgba(247,255,43,.05),
         rgba(247,255,43,1),
-        rgba(247,255,43,.10),
-        rgba(247,255,43,.10)
+        rgba(247,255,43,.05),
+        rgba(247,255,43,.05)
       );
       animation: spin 6s linear infinite;
-      border-radius: calc(var(--radius) + 18px);
 
-      /* Mask to show only the outline ring */
+      /* mask to only show border ring */
       -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      padding: 2px; /* ring thickness */
+    }
+
+    /* subtle glow that stays local to the ring (no streaks) */
+    .neonWrap::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: inherit;
+      box-shadow:
+        0 0 0 1px rgba(247,255,43,.08),
+        0 0 18px rgba(247,255,43,.10);
+      pointer-events:none;
     }
 
     @keyframes spin{ to { transform: rotate(360deg); } }
@@ -131,13 +148,18 @@
       line-height: 1.12;
     }
 
-    /* Remove BLUE from title gradient + divider */
+    /* Demo Portfolio: neon yellow gradient (no blue) */
     .accentText{
-      background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
+      background: linear-gradient(90deg,
+        rgba(247,255,43,.78),
+        rgba(247,255,43,1),
+        rgba(247,255,43,.78)
+      );
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       font-weight: 950;
+      text-shadow: 0 0 14px rgba(247,255,43,.12);
     }
 
     .sub{
@@ -148,6 +170,7 @@
       max-width: 84ch;
     }
 
+    /* Remove blue from divider (pink→purple→aqua→yellow) */
     .underline{
       height: 2px;
       width: 200px;
@@ -155,7 +178,7 @@
       background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonAqua), var(--neonYellow));
       border-radius: 999px;
       opacity: .95;
-      box-shadow: 0 0 14px rgba(247,255,43,.16);
+      box-shadow: 0 0 14px rgba(247,255,43,.12);
     }
 
     .tag{
@@ -165,15 +188,14 @@
       gap:10px;
     }
 
-    /* Neon yellow ONLY for the 3 tabs/pills */
+    /* Pills: NOT neon yellow anymore */
     .pill{
       border: 1px solid rgba(255,255,255,.16);
       background: rgba(0,0,0,.16);
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 12.5px;
-      color: rgba(247,255,43,.92); /* neon yellow */
-      text-shadow: 0 0 10px rgba(247,255,43,.12);
+      color: rgba(238,231,255,.86);
       backdrop-filter: blur(10px);
       white-space: nowrap;
     }
@@ -195,7 +217,7 @@
       background: rgba(255,255,255,.04);
     }
 
-    /* Neon yellow ONLY for these section titles */
+    /* Neon yellow ONLY for section titles */
     .sectionTitle{
       display:flex;
       align-items:center;
@@ -204,7 +226,7 @@
       font-size: 13px;
       letter-spacing: .10em;
       text-transform: uppercase;
-      color: rgba(247,255,43,.92);     /* neon yellow */
+      color: rgba(247,255,43,.92);
       text-shadow: 0 0 12px rgba(247,255,43,.14);
     }
 
@@ -247,11 +269,10 @@
       font-weight: 900;
       font-family: var(--mono);
       letter-spacing: .04em;
-      color: rgba(247,255,43,.92);      /* neon yellow */
+      color: rgba(247,255,43,.92);
       text-shadow: 0 0 10px rgba(247,255,43,.12);
     }
 
-    /* Normal text for demo titles (NOT neon yellow) */
     .demo h3{
       margin: 0;
       font-size: 15.5px;
@@ -265,7 +286,7 @@
       line-height: 1.35;
     }
 
-    /* Right rail links: normal text (NOT neon yellow) */
+    /* Right rail links normal */
     .links a{
       display:block;
       padding: 10px 12px;
