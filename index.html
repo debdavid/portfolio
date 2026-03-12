@@ -16,14 +16,15 @@
       --neonPink:#FF2BD6;
       --neonBlue:#3AA0FF;
       --neonYellow:#F7FF2B;
-      --neonCyan:#2EE7D6;
 
-      --text:#F7F3FF;
-      --muted:rgba(247,243,255,.78);
-      --stroke:rgba(255,255,255,.16);
+      /* Darker/softer text */
+      --text:#DAD3EE;                    /* darker than white */
+      --muted:rgba(218,211,238,.72);
+      --soft:rgba(218,211,238,.62);
+      --stroke:rgba(255,255,255,.14);
 
-      --card:rgba(255,255,255,.07);
-      --cardHover:rgba(255,255,255,.10);
+      --card:rgba(255,255,255,.06);
+      --cardHover:rgba(255,255,255,.09);
 
       --radius:18px;
       --shadow: 0 22px 70px rgba(0,0,0,.55);
@@ -38,10 +39,10 @@
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(1200px 650px at 15% 10%, rgba(161,0,255,.33), transparent 55%),
-        radial-gradient(900px 520px at 82% 18%, rgba(255,43,214,.24), transparent 55%),
-        radial-gradient(900px 600px at 55% 86%, rgba(58,160,255,.18), transparent 55%),
-        radial-gradient(800px 520px at 92% 75%, rgba(247,255,43,.14), transparent 60%),
+        radial-gradient(1200px 650px at 15% 10%, rgba(161,0,255,.28), transparent 55%),
+        radial-gradient(900px 520px at 82% 18%, rgba(255,43,214,.20), transparent 55%),
+        radial-gradient(900px 600px at 55% 86%, rgba(58,160,255,.16), transparent 55%),
+        radial-gradient(800px 520px at 92% 75%, rgba(247,255,43,.12), transparent 60%),
         linear-gradient(180deg, var(--bg0), var(--bg2));
       min-height:100vh;
       overflow-x:hidden;
@@ -53,11 +54,22 @@
       padding: 44px 18px 64px;
     }
 
-    /* Neon outline wrapper (animated yellow "runner") */
+    /* Neon outline without rotating the panel:
+       - outer wrapper stays static
+       - pseudo-element background rotates under a mask
+    */
     .neonWrap{
       position: relative;
       border-radius: calc(var(--radius) + 10px);
-      padding: 1px; /* creates space for animated border */
+      padding: 1px; /* border thickness */
+      overflow: hidden;
+      filter: drop-shadow(0 0 18px rgba(247,255,43,.14));
+    }
+
+    .neonWrap::before{
+      content:"";
+      position:absolute;
+      inset:-30%;
       background: conic-gradient(
         from 0deg,
         rgba(247,255,43,.10),
@@ -65,24 +77,33 @@
         rgba(247,255,43,.10),
         rgba(247,255,43,.10)
       );
-      filter: drop-shadow(0 0 18px rgba(247,255,43,.18));
-      animation: spin 5.5s linear infinite;
+      animation: spinBg 6.2s linear infinite;
     }
 
-    @keyframes spin{
+    /* Mask the center so only an outline ring is visible */
+    .neonWrap::after{
+      content:"";
+      position:absolute;
+      inset: 1px; /* matches padding */
+      border-radius: calc(var(--radius) + 9px);
+      background: linear-gradient(180deg, rgba(10,6,26,.92), rgba(10,6,26,.86));
+      z-index: 0;
+    }
+
+    @keyframes spinBg{
       to { transform: rotate(360deg); }
     }
 
-    /* Pause motion for users who prefer reduced motion */
     @media (prefers-reduced-motion: reduce){
-      .neonWrap{ animation: none; }
+      .neonWrap::before{ animation: none; }
     }
 
-    /* Inner panel keeps content stable (not rotating) */
     .neonInner{
+      position: relative;
+      z-index: 1;
       border-radius: calc(var(--radius) + 9px);
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
       overflow: hidden;
@@ -92,20 +113,20 @@
     .hero{
       position: relative;
       padding: 26px 22px;
-      background: linear-gradient(135deg, rgba(161,0,255,.12), rgba(255,43,214,.08), rgba(58,160,255,.08));
+      background: linear-gradient(135deg, rgba(161,0,255,.10), rgba(255,43,214,.06), rgba(58,160,255,.06));
     }
     .hero:before{
       content:"";
       position:absolute;
       inset:-2px;
       background: linear-gradient(90deg,
-        rgba(161,0,255,.38),
-        rgba(255,43,214,.30),
-        rgba(58,160,255,.30),
-        rgba(247,255,43,.18)
+        rgba(161,0,255,.28),
+        rgba(255,43,214,.22),
+        rgba(58,160,255,.22),
+        rgba(247,255,43,.14)
       );
       filter: blur(28px);
-      opacity:.26;
+      opacity:.22;
       z-index:0;
     }
     .hero > *{ position:relative; z-index:1; }
@@ -115,7 +136,9 @@
       font-size: clamp(28px, 3.2vw, 42px);
       letter-spacing: -.02em;
       line-height: 1.12;
+      color: rgba(234,228,252,.95); /* slightly brighter than body */
     }
+
     .sub{
       margin: 0;
       color: var(--muted);
@@ -138,7 +161,7 @@
       margin-top: 12px;
       background: linear-gradient(90deg, var(--neonPink), var(--neonPurple), var(--neonBlue), var(--neonYellow));
       border-radius: 999px;
-      opacity: .95;
+      opacity: .85;
     }
 
     .tag{
@@ -148,12 +171,12 @@
       gap:10px;
     }
     .pill{
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.05);
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 12.5px;
-      color: rgba(247,243,255,.88);
+      color: rgba(218,211,238,.78);
       backdrop-filter: blur(10px);
       white-space: nowrap;
     }
@@ -172,7 +195,7 @@
     .card{
       padding: 18px;
       border-radius: calc(var(--radius) + 9px);
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.04);
     }
 
     .sectionTitle{
@@ -183,13 +206,13 @@
       font-size: 13px;
       letter-spacing: .10em;
       text-transform: uppercase;
-      color: rgba(247,243,255,.80);
+      color: rgba(218,211,238,.78);
     }
     .spark{
       width: 10px; height: 10px;
       border-radius: 999px;
       background: linear-gradient(135deg, var(--neonPurple), var(--neonPink), var(--neonBlue), var(--neonYellow));
-      box-shadow: 0 0 18px rgba(161,0,255,.35);
+      box-shadow: 0 0 18px rgba(161,0,255,.25);
     }
 
     /* DEMO CARDS */
@@ -198,8 +221,8 @@
       gap: 14px;
       padding: 14px;
       border-radius: 16px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.09);
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
       text-decoration:none;
       color: inherit;
@@ -208,7 +231,7 @@
     .demo:hover{
       transform: translateY(-2px);
       background: var(--cardHover);
-      border-color: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.14);
     }
 
     .badge{
@@ -218,17 +241,19 @@
       border-radius: 16px;
       display:grid;
       place-items:center;
-      border: 1px solid rgba(255,255,255,.18);
-      background: linear-gradient(135deg, rgba(161,0,255,.26), rgba(255,43,214,.18), rgba(58,160,255,.18));
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(135deg, rgba(161,0,255,.18), rgba(255,43,214,.12), rgba(58,160,255,.12));
       font-weight: 800;
       font-family: var(--mono);
       letter-spacing: .04em;
+      color: rgba(234,228,252,.92);
     }
 
     .demo h3{
       margin: 0;
       font-size: 15.5px;
       line-height: 1.2;
+      color: rgba(234,228,252,.93);
     }
     .demo p{
       margin: 6px 0 0;
@@ -237,40 +262,37 @@
       line-height: 1.35;
     }
 
-    /* Raw URLs hidden (cards remain clickable) */
-    .url{ display:none; }
-
     /* Right rail links */
     .links a{
       display:block;
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
       text-decoration:none;
-      color: rgba(247,243,255,.92);
+      color: rgba(234,228,252,.88);
       margin-bottom: 10px;
       transition: background .12s ease, border-color .12s ease;
     }
     .links a:hover{
-      background: rgba(255,255,255,.09);
-      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.14);
     }
 
     .about{
       margin: 12px 0 0;
-      color: rgba(247,243,255,.78);
+      color: rgba(218,211,238,.74);
       font-size: 13.2px;
       line-height: 1.55;
     }
     .about strong{
-      color: rgba(247,243,255,.95);
+      color: rgba(234,228,252,.92);
       font-weight: 700;
     }
     .about ul{
       margin: 10px 0 0;
       padding-left: 18px;
-      color: rgba(247,243,255,.72);
+      color: rgba(218,211,238,.70);
     }
     .about li{
       margin: 6px 0;
@@ -278,7 +300,7 @@
 
     .footer{
       margin-top: 18px;
-      color: rgba(247,243,255,.62);
+      color: rgba(218,211,238,.55);
       font-size: 12.5px;
       text-align:center;
     }
@@ -310,7 +332,7 @@
 
     <div class="grid">
       <!-- LEFT: DEMOS (neon outline box #2) -->
-      <div class="neonWrap" style="animation-duration: 6.3s;">
+      <div class="neonWrap">
         <div class="neonInner">
           <div class="card">
             <div class="sectionTitle"><span class="spark"></span> Streamlit Applications</div>
@@ -335,7 +357,7 @@
       </div>
 
       <!-- RIGHT: LINKS/ABOUT (neon outline box #3) -->
-      <div class="neonWrap" style="animation-duration: 7.1s;">
+      <div class="neonWrap">
         <div class="neonInner">
           <div class="card">
             <div class="sectionTitle"><span class="spark"></span> Links</div>
@@ -352,10 +374,9 @@
                 My background spans data science, cloud analytics, and applied automation—focused on turning
                 ambiguous workflows into reliable, testable solutions.
               </p>
-
               <ul>
-                <li><strong>Method:</strong> frame the decision + success metric, instrument data quality, then iterate with structured outputs and human review where needed.</li>
-                <li><strong>Outcomes:</strong> exception-first triage, audit-ready evidence trails, and lightweight interfaces that support real users—not just notebooks.</li>
+                <li><strong>Method:</strong> define the decision + success metric, instrument data quality, then iterate with structured outputs and human review where needed.</li>
+                <li><strong>Outcomes:</strong> exception-first triage, evidence trails, and lightweight interfaces that support real users—not just notebooks.</li>
                 <li><strong>Operating style:</strong> cost-conscious prototyping, clear documentation, and rapid iteration from feedback.</li>
               </ul>
             </div>
